@@ -40,6 +40,16 @@
       device = "/dev/disk/by-label/chonker";
       fsType = "btrfs";
     };
+
+    "/mnt/kubernetes-pvs/sanic/test-pv" = {
+      device = "/mnt/sanic/test-pv";
+      options = [ "bind" ];
+    };
+
+    "/mnt/kubernetes-pvs/chonker/torrents" = {
+      device = "/mnt/chonker/torrents";
+      options = [ "bind" ];
+    };
   };
 
   users.users = {
