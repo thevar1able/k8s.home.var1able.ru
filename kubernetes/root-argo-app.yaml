@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: argocd
     name: in-cluster
-  project: root-app
+  project: default
   source:
     path: kubernetes/apps
     repoURL: https://github.com/thevar1able/k8s.home.var1able.ru

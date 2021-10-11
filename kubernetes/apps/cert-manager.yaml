@@ -8,7 +8,7 @@ metadata:
 spec:
   destination:
     namespace: helm-guestbook
-    name: dev-cluster
+    name: in-cluster
   project: default
   source:
     path: helm-guestbook
