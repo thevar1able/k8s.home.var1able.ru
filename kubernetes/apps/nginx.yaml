@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-namanger
+  name: nginx
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: cert-manager
+    namespace: kube-system
     name: in-cluster
   project: default
   source:
-    path: deploy/charts/cert-manager
-    repoURL: https://github.com/jetstack/cert-manager
+    path: charts/ingress-nginx
+    repoURL: https://github.com/kubernetes/ingress-nginx
     targetRevision: HEAD
