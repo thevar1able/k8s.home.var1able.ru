@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sonarr
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: torrents
+    name: in-cluster
+  project: default
+  source:
+    path: charts/stable/sonarr
+    repoURL: https://github.com/k8s-at-home/charts
+    targetRevision: HEAD
+    helm:
+      values: |
+        env:
+          TZ: "Europe/Moscow"
+        persistence:
+          media:
+            enabled: true
+            accessMode: ReadWriteOnce
+            size: 3T
+            storageClass: chonker
+          config:
+            enabled: true
+            accessMode: ReadWriteOnce
+            size: 100M
+            storageClass: sanic
+        ingress:
+          main:
+            enabled: true
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+              kubernetes.io/ingress.class: nginx
+              nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.103.0/24
+            hosts:
+              - host: sonarr.k8s.home.var1able.ru
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls:
+              - secretName: sonarr-tls-secret
+                hosts:
+                  - sonarr.k8s.home.var1able.ru
+
