@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfs-subdir-external-provisioner-sanic
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: kube-system
+    name: in-cluster
+  project: default
+  source:
+    path: charts/nfs-subdir-external-provisioner
+    repoURL: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
+    targetRevision: HEAD
+    helm:
+      values: |
+        storageClass:
+          name: sanic
+          defaultClass: true
+        nfs:
+          server: opti
+          path: /srv/nfs/kubernetes-pvs/sanic
+          mountOptions:
+            - 'nfsvers=4.2'
+        
