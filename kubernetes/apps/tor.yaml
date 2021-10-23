@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tor
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: networking
+    name: in-cluster
+  project: default
+  source:
+    path: chart
+    repoURL: https://github.com/JFWenisch/alpine-tor
+    targetRevision: HEAD
+    helm:
+      values: |
+        mode: proxy
+        service:
+          type: ClusterIP
+          torcontactinfo: "anon"
+          tornickname: "3iuhfdxc0i"

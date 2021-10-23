@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jackett
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: torrents
+    name: in-cluster
+  project: default
+  source:
+    path: charts/stable/jackett
+    repoURL: https://github.com/k8s-at-home/charts
+    targetRevision: HEAD
+    helm:
+      values: |
+        env:
+          TZ: "Europe/Moscow"
+        persistence:
+          config:
+            enabled: true
+            accessMode: ReadWriteOnce
+            size: 100M
+            storageClass: sanic
+        
