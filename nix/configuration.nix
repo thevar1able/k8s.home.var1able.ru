@@ -29,7 +29,10 @@
   networking.useDHCP = false;
   networking.interfaces.enp2s0.useDHCP = true;
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false;
+  };
 
   # File systems configuration for using the installer's partition layout
   fileSystems = {
@@ -57,7 +60,7 @@
       thevar1able = {
         isNormalUser = true;
         extraGroups = [ "wheel" "sudo" ];
-        openssh.authorizedKeys.keys = [ "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCyjtLr5GoHo3VqsMM6hH37sUWrZL223dLUckwuVvt1vC2boql6kUw3OXwkwlshpygZejSP6t+OPyOgteijX2KBLIsjKbDZDncaJFZKjHTtfEbmG0rugJ38EFPFV7oUgNV6aTErM3L5nWXLEahUgO3HPc+BhQj0psdNw9wHgmLBToxdABIp4AM/a4ehOjQw3c7W8tdjzwx3vlf3npGHjD5O9ClPi+I7KXKXRI3AoHW4gy8AO+jxtsdacw1b5fTLyiutK3jaKb3BpERVyhG5w+h3NLPI9K4pjTMFOqb3rOG4w85psRClB+svt8GAM+mDQ+4U7opkDTaAj1bEXLSKu5dx thevar1able@var1able-laptop" ];
+        openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINhwryvaSBXLv6DnPAvyN4j98LvnWGz8vxknmfc6ZiJV var1able@var1able.ru" ];
       };
   };
 
