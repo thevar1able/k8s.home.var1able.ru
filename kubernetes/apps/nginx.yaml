@@ -14,8 +14,3 @@ spec:
     path: charts/ingress-nginx
     repoURL: https://github.com/kubernetes/ingress-nginx
     targetRevision: HEAD
-    helm:
-      values: |
-        controller:
-          extraArgs:
-            enable-ssl-passthrough: true
