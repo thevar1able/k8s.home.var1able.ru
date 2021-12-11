@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jellyfin
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: torrents
+    name: in-cluster
+  project: default
+  source:
+    path: charts/stable/jellyfin
+    repoURL: https://github.com/k8s-at-home/charts
+    targetRevision: HEAD
+    helm:
+      values: |
+        image:
+          repository: registry.k8s.home.var1able.ru/jellyfin
+          tag: unstable
+        env:
+          TZ: "Europe/Moscow"
+        persistence:
+          config:
+            enabled: true
+            accessMode: ReadWriteOnce
+            size: 100M
+            storageClass: sanic
+          media:
+            mountPath: /media
+            enabled: true
+            existingClaim: qbittorrent-media
+        ingress:
+          main:
+            enabled: true
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+              kubernetes.io/ingress.class: nginx
+              nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.101.0/24,192.168.103.0/24
+            hosts:
+              - host: jellyfin.k8s.home.var1able.ru
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls:
+              - secretName: jellyfin-tls-secret
+                hosts:
+                  - jellyfin.k8s.home.var1able.ru
+        podSecurityContext:
+          supplementalGroups:
+            - 26
+            - 303
+        resources:
+          requests:
+            gpu.intel.com/i915: 1
+          limits:
+            gpu.intel.com/i915: 1
