@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfs-subdir-external-provisioner-synology-hdd
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: kube-system
+    name: in-cluster
+  project: default
+  source:
+    path: charts/nfs-subdir-external-provisioner
+    repoURL: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
+    targetRevision: HEAD
+    helm:
+      values: |
+        storageClass:
+          name: synology-hdd
+        nfs:
+          server: synology
+          path: /volume1/kubernetes-pvs
+        
