@@ -22,7 +22,7 @@
     hostName = "opti";
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 6443 6881 2049 111 2049 4000 4001 4002 20048 32400 32080 32443 ];
+      allowedTCPPorts = [ 6443 6881 2049 111 2049 4000 4001 4002 20048 32400 32080 32443 10250 ];
       allowedUDPPorts = [ 6881 111 2049 4000 4001 4002 20048 ];
     };    
   };
@@ -40,18 +40,9 @@
       device = "/dev/disk/by-label/sanic";
       fsType = "btrfs";
     };
-    "/mnt/chonker" = {
-      device = "/dev/disk/by-label/chonker";
-      fsType = "btrfs";
-    };
 
     "/srv/nfs/kubernetes-pvs/sanic" = {
       device = "/mnt/sanic";
-      options = [ "bind" ];
-    };
-
-    "/srv/nfs/kubernetes-pvs/chonker" = {
-      device = "/mnt/chonker";
       options = [ "bind" ];
     };
   };
@@ -66,13 +57,12 @@
 
   services.k3s = {
     enable = true;
-    extraFlags = "--tls-san k8s.home.var1able.ru --disable traefik --disable local-storage";
+    extraFlags = "--tls-san k8s.home.var1able.ru --disable traefik";
   };
 
   services.nfs.server = {
     enable = true;
     exports = ''
-      /srv/nfs/kubernetes-pvs/chonker 127.0.0.0/8(rw,sync,all_squash,no_subtree_check,anonuid=1000,anongid=100) 192.168.103.0/24(rw,insecure,sync,all_squash,no_subtree_check,anonuid=1000,anongid=100)
       /srv/nfs/kubernetes-pvs/sanic 127.0.0.0/8(rw,sync,all_squash,no_subtree_check,anonuid=1000,anongid=100)
     '';
     createMountPoints = true;
