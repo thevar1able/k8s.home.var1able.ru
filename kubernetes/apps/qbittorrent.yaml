@@ -16,6 +16,8 @@ spec:
     targetRevision: HEAD
     helm:
       values: |
+        image:
+          tag: v4.4.0
         env:
           TZ: "Europe/Moscow"
         metrics:

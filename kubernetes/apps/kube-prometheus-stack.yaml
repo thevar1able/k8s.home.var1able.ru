@@ -20,3 +20,16 @@ spec:
         prometheus:
           prometheusSpec:
             serviceMonitorSelectorNilUsesHelmValues: false
+        grafana:
+          ingress:
+            enabled: true
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+              kubernetes.io/ingress.class: nginx
+              nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.101.0/24,192.168.103.0/24
+            hosts:
+              - grafana.k8s.home.var1able.ru
+            tls:
+              - secretName: grafana-tls-secret
+                hosts:
+                  - grafana.k8s.home.var1able.ru

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: plex
+  name: ombi
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -11,56 +11,32 @@ spec:
     name: in-cluster
   project: default
   source:
-    path: charts/stable/plex
+    path: charts/stable/ombi
     repoURL: https://github.com/k8s-at-home/charts
     targetRevision: HEAD
     helm:
       values: |
         env:
           TZ: "Europe/Moscow"
-        service:
-          main:
-            type: NodePort
-            ports:
-              http:
-                nodePort: 32400
-          dnla-tcp:
-            enabled: true
-          dnla-udp:
-            enabled: true
         persistence:
           config:
             enabled: true
             accessMode: ReadWriteOnce
             size: 100M
             storageClass: sanic
-          media:
-            mountPath: /media
-            enabled: true
-            accessMode: ReadWriteOnce
-            size: 3T
-            storageClass: chonker       
         ingress:
           main:
             enabled: true
             annotations:
               cert-manager.io/cluster-issuer: letsencrypt
               kubernetes.io/ingress.class: nginx
+              nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.101.0/24,192.168.103.0/24,10.4.20.0/24
             hosts:
-              - host: plex.k8s.home.var1able.ru
+              - host: ombi.k8s.home.var1able.ru
                 paths:
                   - path: /
                     pathType: Prefix
             tls:
-              - secretName: plex-tls-secret
+              - secretName: ombi-tls-secret
                 hosts:
-                  - plex.k8s.home.var1able.ru
-        podSecurityContext:
-          supplementalGroups:
-            - 303
-            - 26
-        resources:
-          requests:
-            gpu.intel.com/i915: 1
-          limits:
-            gpu.intel.com/i915: 1
+                  - ombi.k8s.home.var1able.ru
