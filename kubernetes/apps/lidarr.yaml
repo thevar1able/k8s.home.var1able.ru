@@ -16,8 +16,6 @@ spec:
     targetRevision: HEAD
     helm:
       values: |
-        image:
-          tag: v1.0.0
         env:
           TZ: "Europe/Moscow"
         persistence:
