@@ -1,14 +1,17 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      
+      ./services/openssh.nix
+      ./services/miniupnp.nix
+      ./services/zerotier.nix
     ];
+
+  # ZeroTierOne
+  nixpkgs.config.allowUnfree = true;
 
   hardware.cpu.intel.updateMicrocode = true;
 
@@ -22,17 +25,17 @@
     hostName = "opti";
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 6443 6881 2049 111 2049 4000 4001 4002 20048 32400 32080 32443 10250 ];
-      allowedUDPPorts = [ 6881 111 2049 4000 4001 4002 20048 ];
+      allowedTCPPorts = [ 6443 6881 2049 111 2049 4000 4001 4002 20048 32400 32080 32443 10250 32220 ];
+      allowedUDPPorts = [ 6881 111 2049 4000 4001 4002 20048 32220 ];
     };    
+    # bonds = {
+    #   bond0 = {
+    #     interfaces = [ "enp0s20f0u3" "enp0s20f0u5" ];
+    #   };
+    # };
   };
   networking.useDHCP = false;
   networking.interfaces.enp2s0.useDHCP = true;
-
-  services.openssh = {
-    enable = true;
-    passwordAuthentication = false;
-  };
 
   # File systems configuration for using the installer's partition layout
   fileSystems = {
